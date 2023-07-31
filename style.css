@@ -1,3 +1,26 @@
-h1 {
-    color: red;
+th {
+    text-align: center;
+    font-size: x-large;
+}
+
+body {
+    background-color: #222222;
+    color: white;
+    font-family: monospace;
+}
+
+.center {
+    text-align: center;
+}
+
+.brownFill {
+    background-color: #98643d;
+}
+
+.footer {
+    text-align: center;
+}
+
+a {
+    color: aqua;
 }
