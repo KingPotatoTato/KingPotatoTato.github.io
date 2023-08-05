@@ -1,2 +1,2 @@
 # KingPotatoTato.github.io
-Website about me.
+Blog / Website About Me.
