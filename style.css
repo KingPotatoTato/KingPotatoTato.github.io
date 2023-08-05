@@ -1,4 +1,5 @@
 th {
+    text-align: center;
     font-size: x-large;
 }
 
@@ -14,12 +15,26 @@ body {
 
 .brownFill {
     background-color: #98643d;
+    border: 0px solid #222222;
 }
 
 .footer {
     text-align: center;
+    font-size: 100%;
 }
 
 a {
     color: aqua;
+}
+
+h2 {
+    font-size: xx-large;
+}
+
+p {
+    font-size: 125%;
+}
+
+table, th, td {
+    border: 1px solid white;
 }
