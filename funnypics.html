@@ -1,66 +1,66 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Tato's Random Pictures</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
-    </head>
-    <body>
-        <table style="width:100%"> <!--Has to be a more effective way to do this-->
-            <tr>
-                <th class="brownFill"><h1><b>Tato's Funny Pictures</b></h1></th>
-            </tr>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Random Pictures</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header> <!-- Main Header of website -->
+        <table style="width:100%">
+                <tr>
+                        <th class="header"><b>Random Pictures</b></th>
+                </tr>
         </table>
-        <br>
-        <p class="center"><button type="button" onclick="window.location.href='index.html';">Go Back</button></p>
-        <br>
-        <table style="width:100%;background-color: #222222;" class="center">
-            <tr>
-                <th><img src="Images\oim8.jpg" style="width:345.6px;height:460.3px;background-color: #222222;"></th>
-                <th>
-                    "Oi M8"
-                    <br>June 2, 2023
-                    <br>Calgary, Canada
-                </th>
-            </tr>
-            <tr>
-                <th><img src="Images\artinquotes.jpg" style="width:345.6px;height:460.3px;"></th>
-                <th>
-                    "'Art'"
-                    <br>August 4, 2022
-                    <br>Napa Valley, California
-                </th>
-            </tr>
-            <tr>
-                <th><img src="Images\bear.jpg" style="width:345.6px;height:460.3px;"></th>
-                <th>
-                    "Sitting Bear"
-                    <br>August 3, 2022
-                    <br>Coastal Redwoods, California
-                </th>
-            </tr>
-            <tr>
-                <th><img src="Images\establishedgentleman.jpg" style="width:345.6px;height:460.3px;"></th>
-                <th>
-                    "What an Established Gentleman"
-                    <br>March 29, 2022
-                    <br>Birmingham, Alabama
-                </th>
-            </tr>
-            <tr>
-                <th><img src="Images\iseeu.jpg" style="width:345.6px;height:460.3px;"></th>
-                <th>
-                    "I See You"
-                    <br>August 28, 2021
-                    <br>Pelham, Alabama
-                </th>
-            </tr>
-        </table>
-        <br>
-        <p class="center"><button type="button" onclick="window.location.href='index.html';">Go Back</button></p>
-        <br>
-        <hr> 
-        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on 
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) 2023 KingPotatoTato</b></p>
-    </body>
+</header>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<br>
+<table style="width:100%;background-color: #222222;" class="center">
+        <tr>
+                <th><img src="Images\oim8.jpg" style="width:345.6px;height:460.3px;" alt="2 men talking"></th>
+                <th> "Oi M8" <br>
+                        June 2, 2023 <br>
+                        Calgary, Canada </th>
+        </tr>
+        <tr>
+                <th><img src="Images\artinquotes.jpg" style="width:345.6px;height:460.3px;" alt="'Real' art"></th>
+                <th> "'Art'" <br>
+                        August 4, 2022 <br>
+                        Napa Valley, California </th>
+        </tr>
+        <tr>
+                <th><img src="Images\bear.jpg" style="width:345.6px;height:460.3px;" alt="Bear"></th>
+                <th> "Sitting Bear" <br>
+                        August 3, 2022 <br>
+                        Coastal Redwoods, California </th>
+        </tr>
+        <tr>
+                <th><img src="Images\establishedgentleman.jpg" style="width:345.6px;height:460.3px;" alt="Frog"></th>
+                <th> "What an Established Gentleman" <br>
+                        March 29, 2022 <br>
+                        Birmingham, Alabama </th>
+        </tr>
+        <tr>
+                <th><img src="Images\iseeu.jpg" style="width:345.6px;height:460.3px;" alt="Owl"></th>
+                <th> "I See You" <br>
+                        August 28, 2021 <br>
+                        Pelham, Alabama </th>
+        </tr>
+</table>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+</script>
+</body>
 </html>

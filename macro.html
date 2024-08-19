@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Macro Fun</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+<style>
+.image-container {
+    position: relative;
+    display: inline-block;
+!important;
+}
+.image-container .hover-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity .2s ease;
+!important;
+}
+.image-container:hover .hover-image {
+    opacity: 1;
+!important;
+}
+</style>
+</head>
+<body>
+<header> <!-- Main Header of website -->
+        <table style="width:100%">
+                <tr>
+                        <th class="header"><b>Macro Fun</b></th>
+                </tr>
+        </table>
+</header>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+    <p id="paddingLR" class="center">Welcome to macro fun! The image you see is a macro, and you have to guess what the normal image is. You can see the normal image by hovering over the macro one. If you still don't know, click the still don't know button. More in about macro <a href="https://en.wikipedia.org/wiki/Macro_photography" target="_blank">here</a>. All of these pictures were shot with a Google Pixel 8 Pro.</p>
+    <p style="color: red">Note: this page isn't finished yet.</p>
+    <br>
+<table style="width:100%">
+        <tr class="center">
+                <th> <div class="image-container"> <img src="placeholder" alt="Initial Image" style="width:345.6px;height:460.3px;" class="initial-image"> <img src="placeholder2" alt="Hover Image" style="width:345.6px;height:460.3px;" class="hover-image"> </div>
+                </th>
+                <th><button type="button" onclick="showText0()">Still Don't Know?</button>
+                        <p id="text0"></p>
+                </th>
+        </tr>
+        <tr class="center">
+                <th>image</th>
+                <th><button type="button" onclick=" ">Still Don't Know?</button></th>
+        </tr>
+        <tr class="center">
+                <th>image</th>
+                <th><button type="button" onclick=" ">Still Don't Know?</button></th>
+        </tr>
+        <tr class="center">
+                <th>image</th>
+                <th><button type="button" onclick=" ">Still Don't Know?</button></th>
+        </tr>
+        <tr class="center">
+                <th>image</th>
+                <th><button type="button" onclick=" ">Still Don't Know?</button></th>
+        </tr>
+</table>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+    
+    function showText0() {
+        text = "test0";
+        document.getElementById("text0").innerHTML = text;
+    }
+</script>
+</body>
+</html>

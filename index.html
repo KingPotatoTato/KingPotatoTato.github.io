@@ -1,44 +1,50 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Tato's Blog</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/KingPotatoTato/KingPotatoTato.github.io/main/Images/TatoLogo.png">
-    </head>
-    <body>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tato's Blog</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header> <!-- Main Header of website -->
         <table style="width:100%">
-            <tr>
-                <th class="brownFill"><h1><b>Tato's Blog</b></h1></th>
-            </tr>
+                <tr>
+                        <th class="header"><b>Tato's Blog</b></th>
+                </tr>
         </table>
-        <br>
-        <h2 class="center">My Little Corner of the Internet</h2>
-        <h1 style="color:red;">New & Improved Website Coming Soon!*</h1>
-        <br>
-        <table style="width:100%">
-            <tr class="center">
+</header>
+<br>
+<h2 class="center">My Little Corner of the Internet</h2>
+<br>
+<table style="width:100%">
+        <tr class="center">
                 <th>Random Pictures</th>
                 <th><button type="button" onclick="window.location.href='funnypics.html';">Go There</button></th>
-            </tr>
-            <tr class="center">
+        </tr>
+        <tr class="center">
+                <th>Macro Fun</th>
+                <th><button type="button" onclick="window.location.href='macro.html';">Go There</button></th>
+        </tr>
+        <tr class="center">
                 <th>About Me</th>
                 <th><button type="button" onclick="window.location.href='aboutme.html';">Go There</button></th>
-            </tr>
-            <tr class="center">
+        </tr>
+        <tr class="center">
                 <th>Contact Me</th>
                 <th><button type="button" onclick="window.location.href='contact.html';">Go There</button></th>
-            </tr>
-            <tr class="center">
+        </tr>
+        <tr class="center">
                 <th>HTML & CSS Info</th>
                 <th><button type="button" onclick="window.location.href='htmlandcss.html';">Go There</button></th>
-            </tr>
-        </table>
-        <h3>*Soon as in couple months.</h3>
-        <div>
-            <br>
-            <hr> 
-            <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on 
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) 2023 KingPotatoTato</b></p>
-        </div>
-    </body>
+        </tr>
+</table>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+</script>
+</body>
 </html>

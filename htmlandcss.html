@@ -1,24 +1,42 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>HTML & CSS</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/KingPotatoTato/KingPotatoTato.github.io/main/Images/TatoLogo.png">
-    </head>
-    <body>
-        <table style="width:100%"> <!--Has to be a more effective way to do this-->
-            <tr>
-                <th class="brownFill"><h1><b>HTML & CSS</b></h1></th>
-            </tr>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HTML & CSS</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header> <!-- Main Header of website -->
+        <table style="width:100%">
+                <tr>
+                        <th class="header"><b>HTML & CSS</b></th>
+                </tr>
         </table>
-        <br>
-        <p class="center"><button type="button" onclick="window.location.href='index.html';">Go Back</button></p>
-        <br>
-        <p id="paddingLR" class="center">This is a mini handbook I made about HTML & CSS. It was meant just for me, but I don't see a reason not to release it. Click the view button to view.</p>
-        <br>
-        <p class="center"><button onclick="location.href='https://kingpotatotato.github.io/htmlcsshandbook.html'" type="button">View</button></p>
-        <br>
-        <hr> 
-        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on 
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) 2023 KingPotatoTato</b></p>
-        </body>
+</header>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<br>
+<p id="paddingLR" class="center">This is a mini handbook I made about HTML & CSS. It was meant just for me, but I don't see a reason not to release it. Click the view button to view.</p>
+<p class="center" style="color:red">(Flashbang Warning!)</p>
+<br>
+<p class="center">
+        <button onclick="warning()">View</button>
+</p>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+document.getElementById("year").innerHTML = new Date().getFullYear();
+
+function warning() {
+  if (confirm("WARNING! All white webpage ahead!")) {
+    window.open("https://kingpotatotato.github.io/htmlcsshandbook.html");
+  }
+}
+</script>
+</body>
+</html>

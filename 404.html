@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>No Webpage Found</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/KingPotatoTato/KingPotatoTato.github.io/main/Images/TatoLogo.png">
-    </head>
-    <body style="background-color:gray !important;">
-        <table style="width:100%"> <!--Has to be a more effective way to do this-->
-            <tr>
-                <th style="background-color:red;"><h1><b><i>404 Error</i></b></h1></th>
-            </tr>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Error 404</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color:gray !important;">
+<header> <!-- Main Header of website -->
+        <table style="width:100%">
+                <tr>
+                        <th class="header" style="background-color:red;"><b><i>Error 404</i></b></th>
+                </tr>
         </table>
-        <br>
-        <p class="center">It seems that you tried to find a webpage that doesn't exsit. <i>Great Job</i>... You can click the Go Back button to go back to the home page.</p>
-        <p class="center"><button type="button" onclick="window.location.href='index.html';">Go Back</button></p>
-        <br>
-        <hr> 
-        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on 
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) 2023 KingPotatoTato</b></p>
-        </body>
+</header>
+<br>
+<p class="center">It seems that you tried to find a webpage that doesn't exsit. <i>Great Job</i>... You can click the Go Back button to go back to the home page.</p>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+</script>
+</body>
+</html>

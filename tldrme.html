@@ -1,23 +1,35 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>About Me</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/KingPotatoTato/KingPotatoTato.github.io/main/Images/TatoLogo.png">
-    </head>
-    <body>
-        <table style="width:100%"> <!--Has to be a more effective way to do this-->
-            <tr>
-                <th class="brownFill"><h1><b>About Me</b></h1></th>
-            </tr>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About Me</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header> <!-- Main Header of website -->
+        <table style="width:100%">
+                <tr>
+                        <th class="header"><b>About Me</b></th>
+                </tr>
         </table>
-        <br>
-        <p class="center"><button type="button" onclick="window.location.href='index.html';">Go Back</button></p>
-        <br>
-        <p class="center">My name is Tato, I made this website for fun, don't give out my name due to privacy, I got my alias from stories I used to write.</p>
-        <br>
-        <p class="center"><button type="button" onclick="window.location.href='aboutme.html';">Full Story</button></p>
-        <hr> 
-        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on 
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) 2023 KingPotatoTato</b></p>
-        </body>
+</header>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<br>
+<p class="center">My name is Tato, I made this website for fun, don't give out my name due to privacy, I got my alias from stories I used to write.</p>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='aboutme.html';">Full Story</button>
+</p>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+</script>
+</body>
+</html>

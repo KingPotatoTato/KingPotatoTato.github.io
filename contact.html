@@ -1,8 +1,53 @@
 <!DOCTYPE html>
-<html>
-    <head>
-    <script>
-    function openWinEmail() {
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact Me</title>
+<link rel="icon" type="image/x-icon" href="Images\TatoLogo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header> <!-- Main Header of website -->
+        <table style="width:100%">
+                <tr>
+                        <th class="header"><b>Contact Me</b></th>
+                </tr>
+        </table>
+</header>
+<br>
+<p class="center">
+        <button type="button" onclick="window.location.href='index.html';">Go Back</button>
+</p>
+<br>
+<table style="width:100%">
+        <tr>
+                <th>E-Mail</th>
+                <th><form>
+                                <input type="button" value="kingpotatotato@gmail.com" onclick="openWinEmail()">
+                        </form></th>
+        <tr>
+                <th>Discord</th>
+                <th><form>
+                                <input type="button" value="@KingPotatoTato" onclick="openWinDiscord()">
+                        </form></th>
+        <tr>
+                <th>GitHub Page</th>
+                <th><form>
+                                <input type="button" value="KingPotatoTato" onclick="openWinGitHub()">
+                        </form></th>
+        </tr>
+        </tr>
+        </tr>
+        
+</table>
+<footer> <br>
+        <hr>
+        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
+</footer>
+<script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+    
+     function openWinEmail() {
          window.open("mailto:kingpotatotato@gmail.com");
         }
         function openWinDiscord() {
@@ -11,41 +56,6 @@
         function openWinGitHub() {
          window.open("https://github.com/KingPotatoTato");
         }
-        </script>
-        <title>Contact Me</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/KingPotatoTato/KingPotatoTato.github.io/main/Images/TatoLogo.png">
-    </head>
-    <body>
-    <table style="width:100%"> <!--Has to be a more effective way to do this-->
-            <tr>
-                <th class="brownFill"><h1><b>Contact Me</b></h1></th>
-            </tr>
-        </table>
-        <br>
-        <p class="center"><button type="button" onclick="window.location.href='index.html';">Go Back</button></p>
-        <br>
-        <table style="width:100%">
-            <tr>
-                <th>E-Mail</th>
-                <th><form>
-              <input type="button" value="kingpotatotato@gmail.com" onclick="openWinEmail()">
-            </form></th>
-            <tr>
-                <th>Discord</th>
-                <th><form>
-              <input type="button" value="@KingPotatoTato" onclick="openWinDiscord()">
-            </tr>
-            <tr>
-                <th>GitHub Page</th>
-                <th><form>
-              <input type="button" value="KingPotatoTato" onclick="openWinGitHub()">
-            </tr>
-            </form></th>
-            </tr>
-        </table>
-        <br>
-        <hr> 
-        <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on 
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) 2023 KingPotatoTato</b></p>
-    </body>
+</script>
+</body>
+</html>
