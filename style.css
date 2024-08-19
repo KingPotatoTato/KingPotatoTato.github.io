@@ -19,14 +19,27 @@ body {
     text-align: center;
 }
 
-.brownFill {
+.header {
     background-color: #98643d;
     border: 0px solid #222222;
+	padding-bottom: 35px;
+	padding-top: 35px;
+	font-size: 350%;
 }
 
 .footer {
     text-align: center;
     font-size: 100%;
+}
+
+header {
+ 	align-content: center;
+	text-align: center;
+	width: 100%;
+}
+
+.header {
+	
 }
 
 a {
