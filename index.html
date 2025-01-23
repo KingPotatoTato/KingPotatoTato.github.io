@@ -14,9 +14,11 @@
                 </tr>
         </table>
 </header>
+        
 <br>
 <h2 class="center">My Little Corner of the Internet</h2>
 <br>
+        
 <table style="width:100%">
         <tr class="center">
                 <th>Random Pictures</th>
@@ -39,6 +41,7 @@
                 <th><button type="button" onclick="window.location.href='htmlandcss.html';">Go There</button></th>
         </tr>
 </table>
+        
 <footer> <br>
         <hr>
         <p class="footer">This website is made under the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a> and has been published on <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>. <b>Copyright (c) <span id="year"></span> KingPotatoTato</b></p>
@@ -49,8 +52,27 @@
         <th id= "timer">JS isn't enabled.</th>
         </table>
 </footer>
+        
+<br>
+<hr>
+<h2 class="center" style="color:red">Danger Zone</h2>
+<br>
+        
+<table style="width:100%">
+    <tr class="center" style="color:red">
+                <th>Chrome Bomber</th>
+                <th><button type="button" onclick="warning()">Go There</button></th>
+        </tr>
+</table>
+        
 <script>
     document.getElementById("year").innerHTML = new Date().getFullYear();
+    
+function warning() {
+  if (confirm("This will make you have to close out of chrome!")) {
+    window.open("https://kingpotatotato.github.io/goobyetochrome.html");
+  }
+}
 </script>
 </body>
 </html>
