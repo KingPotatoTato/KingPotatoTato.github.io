@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>sample-inline</title>
+<link rel="stylesheet" type="text/css" href="css/gse-style.css" />
+<link rel="stylesheet" type="text/css" href="css/gse-style-loading.css" />
+<style type="text/css">
+
+body {
+	font-family: sans-serif;
+}
+
+#gse-player {
+	width: 568px;
+	height: 320px;
+}
+
+</style>
+</head>
+<body>
+<h1>My Great Project</h1>
+<div id="gse-player" class="gse-frame">
+	<div class="gse-overlay">
+		<div id="gse-text" class="gse-dialog">
+			<div>
+				<button id="gse-text-cancel">Cancel</button>
+				<button id="gse-text-done">Done</button>
+				<p id="gse-text-prompt"></p>
+			</div>
+			<div>
+				<textarea id="gse-text-input"></textarea>
+			</div>
+		</div>
+		<div id="gse-loading" style="visibility: visible;">
+			<img src="images/gse-loading.png" />
+		</div>
+	</div>
+</div>
+<p>Thanks for playing!</p>
+<script type="text/javascript">
+
+(function(global) {
+
+	global.onEngineLoad = function() {
+		gse.ready(function(engine) {
+			var loadingElement = document.getElementById('gse-loading');
+			var playerDelegate = {
+				onLoadingBegin: function() {
+					engine.showOverlay();
+					loadingElement.style.visibility = 'visible';
+				},
+
+				onLoadingEnd: function() {
+					loadingElement.style.visibility = 'hidden';
+					engine.hideOverlay();
+				}
+			};
+			engine.appendDelegate(playerDelegate);
+
+			var gamePath = 'game/default';
+			engine.setRenderFrame('gse-player');
+			engine.setOptions({
+				'viewport-reference': 'frame',
+				'viewport-fit': 'letterbox'
+			});
+			engine.play(gamePath);
+		});
+	};
+
+}(window));
+
+</script>
+<script type="text/javascript" src="js/gse/gse-export.js" async onload="onEngineLoad()"></script>
+</body>
+</html>

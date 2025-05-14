@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--
+
+INTRODUCTION:
+This HTML document and related files are a working example of how to embed a
+GameSalad HTML5 game into a website. In all, the necessary files include:
+
+1. A snippet of HTML elements. (see below: "gse-player" element)
+2. Some CSS declarations. (see file: gse-style.css)
+3. The JavaScript engine file. (see below: script tags)
+4. Some ad-hoc JavaScript code to configure and initialize the game. (see below:
+   script tags)
+5. The directory of game data and assets.
+
+
+HOW TO:
+Very broadly, there are two common scenarios to embed your game in a webpage.
+Your choice will depend on the layout and requirements of your site.
+
+Scenario 1: iframe
+Create a separate dedicated page based on this source that only runs the game.
+Then embed that page into another page's layout using an iframe tag. This setup
+is the simplest.
+
+Scenario 2: inline
+Integrate all the necessary elements into one HTML page by copying and tailoring
+pieces from of this source. This setup may save some extra web requests, as well
+as allowing more complicated layering of the game and other HTML elements.
+
+-->
+<title></title>
+<!--
+
+CSS STYLE:
+The file gse-style.css contains the essential rules required for the engine to
+display properly. However, there are some customizable considerations:
+
+What appears before the game is loaded? The game will not draw anything until
+the first scene begins. Until then, you can show something else by layering
+elements underneath or on top of the player.
+
+What appears behind the game as it plays? If the game doesn't scale to fit the
+player area or it uses letterboxing, then there will be empty space around the
+player. You can control what appears in that area either by layering elements
+underneath the player or by setting the background-color or background-image.
+
+What appears during loading? This document implements a very simple loading
+animation. It can be customized by replacing the image and modifying the CSS
+styling. Or you can modify the JavaScript code to make a different experience.
+
+-->
+<link rel="stylesheet" type="text/css" href="css/gse-style.css" />
+<link rel="stylesheet" type="text/css" href="css/gse-style-loading.css" />
+<style type="text/css">
+
+body {
+	background-color: black;
+	margin: 0;
+	padding: 0;
+}
+
+</style>
+</head>
+<body>
+<!--
+
+RENDER FRAME and VIEWPORT:
+The render frame is the area of the screen that contains the game. In practice,
+the render frame is an HTML div that we will call "gse-player".
+The viewport is the area inside the render frame that scales and clips the game's
+drawing functions. By customizing the viewport, we can do things like letterbox
+the game within the render frame to better fit different-sized screens.
+
+Setting up the viewport is achieved with a combination of CSS and JavaScript.
+The size of the gse-player element should be set with CSS.
+The other viewport options are configured with the engine.setOptions() function
+that you will call in the gse.ready() callback.
+
+Here are some common scenarios:
+
+1. You want to display the game at the same size as it was designed in Creator.
+- Set the CSS width and height of the gse-player element to 0.
+- viewport-reference = game
+- viewport-fit = none
+
+
+2. You want the game to display at a fixed size, but possible larger or smaller
+   than the original size from Creator. You will ask the engine to zoom, pad, or
+   crop the game best fit in the desired area.
+   Letterbox is the easiest approach, but some may prefer overscan if the game
+   was designed with it in mind.
+- Set the CSS width and height of the gse-player element to the fixed size.
+- If letterboxing, set a background-image or background-color (e.g. black)
+- viewport-reference = frame
+- viewport-fit = letterbox or overscan (or center or fill, but less common)
+
+
+3. You want the game to fill the entire browser window (or parent iframe).
+   You may choose letterbox or overscan to fit browsers and screens of different
+   sizes.
+- Set the CSS width and height of the gse-player element to 0.
+- viewport-reference = window
+- viewport-fit = letterbox or overscan
+- Use a window resize event handler to call engine.relayout() so that the engine
+  can resize itself when the window resizes.
+
+-->
+<div id="gse-player" class="gse-frame">
+	<!-- The engine will create and insert drawing elements here. -->
+	<div class="gse-overlay">
+		<div id="gse-text" class="gse-dialog">
+			<div>
+				<button id="gse-text-cancel">Cancel</button>
+				<button id="gse-text-done">Done</button>
+				<p id="gse-text-prompt"></p>
+			</div>
+			<div>
+				<textarea id="gse-text-input"></textarea>
+			</div>
+		</div>
+		<div id="gse-browser" class="gse-dialog">			
+			<iframe id="gse-browser-frame"></iframe>
+				<button id="gse-browser-close" href="#">&#10006;</button>
+		</div>
+		<div id="gse-loading" style="visibility: visible;">
+			<img src="images/gse-loading.png" />
+		</div>
+	</div>
+</div>
+<!--
+
+LOADING SCRIPT:
+Here we define a callback function and pass it as an argument to gse.ready().
+After the engine has loaded and initialized, it will invoke our callback. At a
+minimum, we must tell the engine where to draw [with engine.setRenderFrame()]
+and where to find the game assets [with engine.play()].
+
+We can also tinker with some engine options and hook into game events via the
+delegate pattern.
+
+We must call gse.ready() after the engine file has loaded. There are a few ways
+to accomplish this. See the section below for more detail on that.
+
+-->
+<script type="text/javascript">
+(function(global) {
+
+	// This function is called after the engine script file has loaded.
+	// At that point, the gse.ready function has be defined and we can call it.
+	global.onEngineLoad = function() {
+
+		// gse.ready() is a global function defined by the engine JavaScript
+		// file. It is the only global function of the API and the only way to
+		// initially interact with the game. The remainder of the API is object-
+		// oriented.
+		// We define a ready callback function and pass it to gse.ready().
+		// Later, that callback will be invoked when the engine is ready.
+		// Via the callback's arguments, the GameSalad code passes us back an
+		// object called "engine" which implements several useful API functions.
+		gse.ready(function(engine) {
+
+			// These bits of code are optional. This demonstration shows how to
+			// use a delegate to control a loading animation that spins in
+			// between scene loads.
+			// A delegate is a JavaScript object that receives callback from the
+			// engine on particular events.
+			// To customize this animation, you can replace the gse-loading.png
+			// image with another, and you can tailor the CSS styling and
+			// animation to match (say, make it bounce instead of spin).
+			// Or, you can replace this entirely with your own JavaScript code.
+			var loadingElement = document.getElementById('gse-loading');
+			var playerDelegate = {
+				onLoadingBegin: function() {
+					engine.showOverlay();
+					loadingElement.style.visibility = 'visible';
+				},
+
+				onLoadingEnd: function() {
+					loadingElement.style.visibility = 'hidden';
+					engine.hideOverlay();
+				},
+
+				onWindowResize: function() {
+					engine.relayout();
+				}
+			};
+			engine.appendDelegate(playerDelegate);
+			window.addEventListener('resize', playerDelegate.onWindowResize, false);
+
+			// Pause and resume on page becoming visible/invisible
+			var MUTE_ON_HIDDEN = false;
+			if (MUTE_ON_HIDDEN) {
+				document.addEventListener("visibilitychange", onVisibilityChanged, false);
+				document.addEventListener("mozvisibilitychange", onVisibilityChanged, false);
+				document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
+				document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
+				function onVisibilityChanged() {
+					if (document.hidden || document.mozHidden || document.webkitHidden || document.msHidden)
+						gse.setGameVolume(engine, 0);
+					else
+						gse.setGameVolume(engine, 1);
+				};
+			}
+
+			// These lines initialize and configure the engine.
+			// The choices for engine.setOptions are:
+			// viewport-reference = game | frame | window
+			// viewport-fit = none | center | fill | letterbox | overscan
+			engine.setRenderFrame('gse-player');
+			engine.setOptions({
+				'viewport-reference': 'window',
+				'viewport-fit': 'letterbox'
+			});
+			engine.loadOptionsFromURL();
+
+
+			// For Arcade Cabinet back button
+			/*
+			setInterval(() => {
+				const players = gs.Game.current.devices.players
+				const player1 = players.player1
+				if (player1) {
+					const exitPressed = player1.rightShoulder1.getValue() || player1.rightShoulder2.getValue()
+					if (exitPressed) {
+						history.back()
+					}
+				}
+			}, 500)
+			*/
+
+
+			// While the engine is ready, the game assets have not been loaded
+			// yet. The final step is to begin loading the game.
+			// We have a few options:
+
+			// 1. Begin loading game assets immediately, from the default game
+			// location, and then start the first scene soon as it is complete.
+			// This is the simplest option with just one line.
+			engine.play();
+
+
+			// 2. Load a game from a location other than the default. Use this
+			// if you have renamed the game directory, or have organized the
+			// files on the webserver different from the default.
+			//engine.play('path/to/game/directory');
+
+
+			// 3. Begin loading the game in the background, but do not
+			// immediately start the first scene.
+			// Instead, we will delay starting the game until some user event,
+			// such as waiting for them to click a button. This is an open ended
+			// choice, so implementations will vary.
+			// A very simple example might look like this below.
+			// Notice we pass a path to the load() function and then later call
+			// the play() function without any arguments. You just need a
+			// reference to the engine object, either in this closure scope or
+			// with a global variable.
+			// If you choose this route, you might want to tinker with the
+			// loading animation code so that you get the right visual experience.
+
+			// begin loading...
+			//engine.load('path/to/game/directory');
+
+			// register a click listener to start the game
+			//document.getElementById('gse-player').addEventListener('click', function() {
+			//	engine.play();
+			//});
+
+
+			// 4. Neither load nor play the game immediately. Like the previous
+			// option, this can be very open ended. For example, maybe you want
+			// to play a video clip first, and then load the game.
+			// You can defer calling engine.load() and engine.play() in response
+			// to whatever JavaScript events suits your design.
+		});
+	};
+
+}(window));
+
+</script>
+<!--
+
+JAVASCRIPT ENGINE:
+There are three ways to declare the engine script tag.
+
+ASYNCHRONOUS:
+Declare the script for gse.ready() first, but wrapped in an onload function.
+Then declare the script tag for the engine with the "async" attribute and an
+"onload" handler.
+This allows for a smoother page load while ensuring that things are loaded in
+the right order.
+This is the preferred method and the one use by this sample.
+
+SYNCHRONOUS:
+Declare the engine script tag first, with neither "async" nor "onload".
+Then declare the loading script with gse.ready() after it. In this case, the
+call to gse.ready() is global instead of wrapped in an onload function.
+This is more straightforward, but depending on the overall layout of your page,
+it could interrupt page loading.
+
+DYNAMIC:
+You can generate the script tags dynamically with the DOM API or with help from
+a library like jQuery. This is open ended and could get complicated. Generally
+though, the GameSalad engine can play nice with other code and libraries as long
+as these things happen in order:
+1. Load the engine file.
+2. Invoke gse.ready() with your ready callback as the argument.
+3. Some time later, the engine will automatically invoke your ready callback.
+4. You may invoke any of the engine.* functions within your read callback or at
+   any time afterward (provided you keep a reference to the engine object), but
+   not before.
+
+Note that the "gse" namespace is global but the "engine" object is not.
+
+-->
+<script type="text/javascript" src="js/gse/gse-export.js" async onload="onEngineLoad()"></script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--
+
+INTRODUCTION:
+This HTML document and related files are a working example of how to embed a
+GameSalad HTML5 game into a website. In all, the necessary files include:
+
+1. A snippet of HTML elements. (see below: "gse-player" element)
+2. Some CSS declarations. (see file: gse-style.css)
+3. The JavaScript engine file. (see below: script tags)
+4. Some ad-hoc JavaScript code to configure and initialize the game. (see below:
+   script tags)
+5. The directory of game data and assets.
+
+
+HOW TO:
+Very broadly, there are two common scenarios to embed your game in a webpage.
+Your choice will depend on the layout and requirements of your site.
+
+Scenario 1: iframe
+Create a separate dedicated page based on this source that only runs the game.
+Then embed that page into another page's layout using an iframe tag. This setup
+is the simplest.
+
+Scenario 2: inline
+Integrate all the necessary elements into one HTML page by copying and tailoring
+pieces from of this source. This setup may save some extra web requests, as well
+as allowing more complicated layering of the game and other HTML elements.
+
+-->
+  <title></title>
+  <!--
+
+CSS STYLE:
+The file gse-style.css contains the essential rules required for the engine to
+display properly. However, there are some customizable considerations:
+
+What appears before the game is loaded? The game will not draw anything until
+the first scene begins. Until then, you can show something else by layering
+elements underneath or on top of the player.
+
+What appears behind the game as it plays? If the game doesn't scale to fit the
+player area or it uses letterboxing, then there will be empty space around the
+player. You can control what appears in that area either by layering elements
+underneath the player or by setting the background-color or background-image.
+
+What appears during loading? This document implements a very simple loading
+animation. It can be customized by replacing the image and modifying the CSS
+styling. Or you can modify the JavaScript code to make a different experience.
+
+-->
+  <link rel="stylesheet" type="text/css" href="css/gse-style.css" />
+  <link rel="stylesheet" type="text/css" href="css/gse-style-loading.css" />
+  <style type="text/css">
+    body {
+      background-color: black;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="gse-player" class="gse-frame">
+    <!-- The engine will create and insert drawing elements here. -->
+    <div class="gse-overlay">
+      <div id="gse-text" class="gse-dialog">
+        <div>
+          <button id="gse-text-cancel">Cancel</button>
+          <button id="gse-text-done">Done</button>
+          <p id="gse-text-prompt"></p>
+        </div>
+        <div>
+          <textarea id="gse-text-input"></textarea>
+        </div>
+      </div>
+      <div id="gse-loading" style="visibility: visible;">
+        <img src="images/gse-loading.png" />
+      </div>
+    </div>
+  </div>
+  <!--
+
+LOADING SCRIPT:
+Here we define a callback function and pass it as an argument to gse.ready().
+After the engine has loaded and initialized, it will invoke our callback. At a
+minimum, we must tell the engine where to draw [with engine.setRenderFrame()]
+and where to find the game assets [with engine.play()].
+
+We can also tinker with some engine options and hook into game events via the
+delegate pattern.
+
+We must call gse.ready() after the engine file has loaded. There are a few ways
+to accomplish this. See the section below for more detail on that.
+
+-->
+  <script type="text/javascript">
+    window.idAsyncInit = function() { // SDK downloaded, start initializing.
+      // Y8 sepcific.
+      // Uncomment if you are using game services
+      /*
+      ID.init({
+        appId : 'YOUR APP ID'
+      });
+
+      ID.getLoginStatus(function(data) { // Try Autologin
+        if (data.status == 'not_linked' || data.status == 'uncomplete') {
+          ID.login(loginCallback); // Connect/Request permission
+        } else {
+          // Not logged in
+        }
+      });
+    
+      // This loads achievement titles to make it possible to submit achievements.
+      // You could also hardcode the map from unlock keys to achievement titles instead
+      // That would be faster, but might result in cheating.
+      var ACHIEVEMENT_TITLES = {};
+      ID.GameAPI.Achievements.listCustom({}, function (data) {
+        ACHIEVEMENT_TITLES = data.achievements.reduce(function (aMap, ach) {
+          aMap[ach.achievementkey] = ach.achievement;
+          return aMap;
+        }, {});
+      })
+      */
+
+      // Here's a function for loading table data from the service.
+      // Call this with the table ID if you know you are saving table data to Y8.
+      // You will need to know the IDs of the tables you are saving to the servece.
+      function loadSavedTableData(tableId) {
+        ID.api('user_data/retrieve', 'POST', {key: 'gstable:' + tableId}, function(response){
+            try {
+                var data = JSON.parse(res.jsondata);
+                if (data) {
+                  engine.postEvent('externalWriteGameAttribute', null, "game.attributes." + tableId, data);
+                }
+            } catch(e) {
+                console.log(e);
+            }
+        });
+      }
+
+      // Initialize ad serving with your game id.
+      ID.Event.subscribe('id.init', function() { // SDK initialized
+        ID.ads.init('YOUR GAME ID');
+      });
+    };
+
+
+    (function (global) {
+
+      // This function is called after the engine script file has loaded.
+      // At that point, the gse.ready function has be defined and we can call it.
+      global.onEngineLoad = function () {
+
+        // gse.ready() is a global function defined by the engine JavaScript
+        // file. It is the only global function of the API and the only way to
+        // initially interact with the game. The remainder of the API is object-
+        // oriented.
+        // We define a ready callback function and pass it to gse.ready().
+        // Later, that callback will be invoked when the engine is ready.
+        // Via the callback's arguments, the GameSalad code passes us back an
+        // object called "engine" which implements several useful API functions.
+        gse.ready(function (engine) {
+
+          // These bits of code are optional. These delegates let you customize what happens
+          // when certain actions happen. 
+          // You can uses these to implement behavior for various HTML5 arcade SDKs
+          // Or just do something completely custom.
+          var loadingElement = document.getElementById('gse-loading');
+
+          var playerDelegate = { 
+            // This is the most flexible function as the behavior can send two arbitrary strings.
+            // Instead of literally tweeting, you could intercept special key strings 
+            // to perform actions like send anaylitcs events or send other messages to an SDK.
+            onTweetSheet: function (msg, img) {
+              // In this case we assume twitter isn't being used. For analytics the img is the event and the msg is the event value.
+              /*
+              ID.Analytics.customEvent(img, msg);
+              */
+            },
+
+            // This delegate is called right after the scene change is requested
+            // but before the actual scene change.
+            // This is a great place to call an ad display.
+            onSceneAboutToChange : function (sceneKey, sceneName, adType) {
+              // 0 = No Ads, 1 = interstitial ads, 2 = rewarded ads.
+              // So this shows an ad on any ad type.
+              if (adType > 0) {
+                gse.pause();
+                ID.ads.display(function() {
+                  gse.unpause();
+                })
+              }
+            },
+
+            // This is called after a scene has been loaded.
+            onCurrentSceneChanged: function (sceneKey, sceneName) {
+            },
+
+
+            /*
+            onGameCenterShowLeaderboard: function(leaderboard) {
+              if (leaderboard && leaderboard != '') {
+                ID.GameAPI.Leaderboards.list({
+                  table: leaderboard
+                })
+              }
+            },
+
+            onGameCenterShowAchievements: function() {
+              ID.GameAPI.Achievements.list();
+            },
+
+            // If your SDK has the concept of a Leaderboard or Achievements, you should implement these.
+            // Use the "Platform - Post Score" behavior.
+            onGameCenterPostScore: function (score, leaderboard) {
+              ID.GameAPI.Leaderboards.save(
+                {
+                  table: leaderboard,
+                  points: score,
+                  allowduplicates: false, // Set to true if player’s can submit more than one score.
+                  highest: true, // Set to false if a lower score is better.
+                },
+                function (data) {
+                  console.log('Leaderboard score posted:', data);
+                }
+              );
+            },
+
+            // Use the "Platform - Update Achievement" behavior.
+            onGameCenterUpdateAchievement: function (identifier, percentageComplete) {
+              ID.GameAPI.Achievements.save(
+                {
+                  achievement: ACHIEVEMENT_TITLES[identifier], // The achievement title.
+                  achievementkey: identifier, // The unlock key generated from the achievements application page. This must also exactly match.
+                  overwrite: false, // If true, allows players to unlock the same achievement more than once.
+                  allowduplicates: false, // If true, allow players to unlock the same achievement and display them seperatly.
+                },
+                function (data) {
+                  console.log('Achievement updated:', data);
+                }
+              );
+            },
+            */
+
+            // Uncomment if you want to intercept local storage.
+            // These are great for changing where data is stored when you call Save Table or Save Attribute.
+            // For instance, if you want to save game state to a server or with a game service's API
+            // instead of in browser local storage.
+            /*
+            // Key is the table ID. Table is the table's data.
+            onSaveTable: function(key, table) {
+              var data = table;
+              ID.api(
+                'user_data/submit',
+                'POST',
+                {
+                  key: 'gstable:' + key,
+                  value: JSON.stringify(data)
+                },
+                function(response){
+                  console.log(response);
+                }
+              );
+              return undefined; // Return null if you don't want state to be stored in local storage.
+            },
+
+            onSaveAttribute: function(key, value) {
+              var data = value;
+              ID.api(
+                'user_data/submit',
+                'POST',
+                {
+                  key: key,
+                  value: JSON.stringify(data)
+                },
+                function(response){
+                  console.log(response);
+                }
+              );
+              return undefined; // Return null if you don't want state to be stored in local storage.
+            },
+
+            // This function assumes the data has already been loaded by "a loadState response".
+            onLoadAttribute: function(key) {
+              ID.api(
+                'user_data/retrieve',
+                'POST',
+                {key: key},
+                function(response){
+                  try {
+                    return JSON.parse(res.jsondata);
+                  } catch(e) {
+                    console.log(e);
+                  }
+                }
+              );
+              return undefined; // Return null if you to want to try looking in local storage, default behavior.
+            },
+            */
+
+            // Shows the loadingElement (the loading circle) on the page when scene loading is happending.
+            // You could use this to instead show a custom full screen loading page or 
+            // call loading screen APIs from another SDK.
+            onLoadingBegin: function () {
+              engine.showOverlay();
+              loadingElement.style.visibility = 'visible';
+            },
+
+            // Hides the loadingElement (the loading circle) on the page when scene loading is complete.
+            onLoadingEnd: function () {
+              loadingElement.style.visibility = 'hidden';
+              engine.hideOverlay();
+            },
+
+            // Usefuly if you need to report the dimensions of the game to the service
+            // Or if you want to manually set the div size based on the game dimensions
+            // (for instance, if default to full browser window height and width, but then want
+            // to adjust to be the proper aspect ratio)
+            onGameDimensionsKnown: function (width, height) {
+            },
+
+            // This is called when the game is ready to start.
+            onGameReady: function (width, height) {
+            },
+
+            // This is called whenever the browser window is resized. By default we call (engine.relayout())
+            // To adjust the game display to match, but you could comment it out if you don't want any adjustment.
+            onWindowResize: function () {
+              engine.relayout();
+            }
+          };
+
+          engine.appendDelegate(playerDelegate);
+          window.addEventListener('resize', playerDelegate.onWindowResize, false);
+
+          // These lines initialize and configure the engine.
+          // The choices for engine.setOptions are:
+          // viewport-reference = game | frame | window
+          // viewport-fit = none | center | fill | letterbox | overscan
+          engine.setRenderFrame('gse-player');
+          engine.setOptions({
+            'viewport-reference': 'window',
+            'viewport-fit': 'letterbox'
+          });
+          engine.loadOptionsFromURL();
+
+          // While the engine is ready, the game assets have not been loaded
+          // yet. The final step is to begin loading the game.
+          // We have a few options:
+
+          // 1. Begin loading game assets immediately when LoL is ready, from the default game
+          // location, and then start the first scene soon as it is complete.
+          // This is the simplest option with just one line.
+
+          engine.play();
+        });
+      };
+
+    }(window));
+  </script>
+  <script type="text/javascript" src="js/gse/gse-export.js" async onload="onEngineLoad()"></script>
+  <script src="https://cdn.y8.com/api/sdk.js" async></script>
+</body>
+</html>
