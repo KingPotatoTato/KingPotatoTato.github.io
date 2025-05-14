@@ -1,0 +1,25 @@
+@keyframes gse-rotate {
+	0% {
+		transform: rotateZ(0deg);
+	}
+	100% {
+		transform: rotateZ(360deg);
+	}
+}
+
+@-webkit-keyframes gse-webkit-rotate {
+	from {
+		-webkit-transform: rotateZ(0deg);
+	}
+	to {
+		-webkit-transform: rotateZ(360deg);
+	}
+}
+
+#gse-loading img {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	animation: gse-rotate 1s infinite linear;
+	-webkit-animation: gse-webkit-rotate 1s infinite linear;
+}

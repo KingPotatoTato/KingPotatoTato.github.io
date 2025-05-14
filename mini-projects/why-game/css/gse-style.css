@@ -1,0 +1,136 @@
+.gse-frame {
+	position: relative;
+	overflow: hidden;
+}
+
+.gse-frame, .gse-frame>*, .gse-frame div {
+	margin: 0;
+	padding: 0;
+}
+
+.gse-overlay {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+
+.gse-overlay>div {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+}
+
+.gse-dialog {
+	font: medium sans-serif;
+	color: #fff;
+	pointer-events: auto;
+}
+
+.gse-dialog>div {
+	position: absolute;
+	width: 100%;
+}
+
+.gse-dialog>div:first-child {
+	position: absolute;
+	height: 100%;
+	padding-top: 36px !important;
+	box-sizing: border-box;
+}
+
+.gse-dialog>div:last-child {
+	background-color: #000;
+	height: 36px;
+}
+
+.gse-dialog>div:last-child p {
+	margin: 0 !important;
+	padding: 8px 0 0 8px !important;
+}
+
+.gse-dialog button {
+	float: right;
+	margin: 8px 8px 0 0;
+	padding: 2px 6px 3px;
+}
+
+.gse-dialog textarea {
+	display: block;
+	position: relative;
+	border: none;
+	width: 100%;
+	height: 100%;
+	font: medium sans-serif;
+	padding: 0.5em;
+	box-sizing: border-box;
+	resize: none;
+}
+
+.gse-dialog iframe {
+	position: relative;
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+
+.gse-debug {
+	color: #9f9;
+	font: 12px sans-serif;
+}
+
+.gse-debug table, .gse-debug span {
+	background: rgba(0, 0, 0, 0.25);
+}
+
+.gse-debug table caption {
+	font-weight: bold;
+	text-align: left;
+}
+
+.gse-debug th {
+	font-weight: bold;
+}
+
+.gse-debug th, .gse-debug td {
+	padding: 0 2px;
+}
+
+.gse-debug td:not(:first-child) {
+	text-align: right;
+}
+
+.gse-profiler {
+	position:absolute;
+	right: 0;
+	top: 0;
+}
+
+.gse-log {
+	position:absolute;
+	left: 0;
+	bottom: 0;
+}
+
+.gse-log p {
+	color: rgba(255, 255, 200, 0.666);
+	margin: 0;
+	padding: 0;
+}
+
+#gse-browser #gse-browser-frame {
+	width: calc(100% - 8px);
+	height: calc(100% - 8px);
+	padding: 0;
+	border: 0;
+}
+
+#gse-browser #gse-browser-close {
+	position: fixed;
+	top: 16px;
+	right: 16px;
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+}
