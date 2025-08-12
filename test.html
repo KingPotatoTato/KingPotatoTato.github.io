@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Supabase Auth Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h2>Supabase Auth Demo</h2>
+
+  <div id="auth-forms">
+    <h3>Sign Up</h3>
+    <input type="email" id="signup-email" placeholder="Email" />
+    <input type="password" id="signup-password" placeholder="Password" />
+    <button onclick="signUp()">Sign Up</button>
+
+    <h3>Log In</h3>
+    <input type="email" id="login-email" placeholder="Email" />
+    <input type="password" id="login-password" placeholder="Password" />
+    <button onclick="logIn()">Log In</button>
+  </div>
+
+  <div id="user-info" style="display:none;">
+    <p>Logged in as: <span id="user-email"></span></p>
+    <button onclick="logOut()">Log Out</button>
+  </div>
+
+  <script>
+    // Replace these with your actual Supabase project details
+    const SUPABASE_URL = 'https://dskrmghwmdxlokcwisxj.supabase.co'
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRza3JtZ2h3bWR4bG9rY3dpc3hqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ5NjE5ODEsImV4cCI6MjA3MDUzNzk4MX0.AYWxcsgwFinyx0TaAW9ZLpQwvNVLfgsB7jEkjK-jLdI'
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    async function signUp() {
+      const email = document.getElementById('signup-email').value
+      const password = document.getElementById('signup-password').value
+
+      const { error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        alert('Sign Up Error: ' + error.message)
+      } else {
+        alert('Sign up successful! Check your email for confirmation.')
+      }
+    }
+
+    async function logIn() {
+      const email = document.getElementById('login-email').value
+      const password = document.getElementById('login-password').value
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        alert('Log In Error: ' + error.message)
+      } else {
+        showUser(data.user)
+      }
+    }
+
+    async function logOut() {
+      await supabase.auth.signOut()
+      document.getElementById('user-info').style.display = 'none'
+      document.getElementById('auth-forms').style.display = 'block'
+    }
+
+    function showUser(user) {
+      document.getElementById('user-email').textContent = user.email
+      document.getElementById('user-info').style.display = 'block'
+      document.getElementById('auth-forms').style.display = 'none'
+    }
+
+    // Check if user is already logged in when page loads
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && session.user) {
+        showUser(session.user)
+      }
+    })
+
+    // Listen for auth state changes (optional but handy)
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session && session.user) {
+        showUser(session.user)
+      } else {
+        document.getElementById('user-info').style.display = 'none'
+        document.getElementById('auth-forms').style.display = 'block'
+      }
+    })
+  </script>
+</body>
+</html>
