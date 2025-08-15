@@ -88,10 +88,6 @@ class SlotMachine {
       'overall',
       parseInt(localStorage.getItem('overall'), 10) - inputCredits
     );
-    if (inputCredits > credits) {
-      creditInput.value = credits;
-      inputCredits = credits;
-    }
     this.spinButton.disabled = true;
     creditInput.disabled = true;
     this.result.textContent = 'Spinning...';
@@ -229,6 +225,10 @@ class SlotMachine {
         messages[Math.floor(Math.random() * messages.length)];
       this.result.className = 'result';
     }
+    if (inputCredits > credits) {
+      creditInput.value = credits;
+      inputCredits = credits;
+    }
     localStorage.setItem('credits', credits);
     creditsDisplay.textContent = intToString(credits);
     if (won != 0) {
@@ -252,3 +252,4 @@ class SlotMachine {
 window.addEventListener('load', () => {
   new SlotMachine();
 });
+
