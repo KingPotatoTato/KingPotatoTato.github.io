@@ -1,48 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="images/TatoLabsLogo.ico">
-   <title>404</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="globalScript.js"></script>
+    <title>404</title>
   </head>
-  
   <body>
-      <header>
-        <table id="invis">
-          <th id="invis" class="imgLogo">
-            <img id="mainLogo" src="images/TatoLabsLogo.png" alt="TLL" onclick="location.href = 'index.html';">
-          </th>
-          <th id="invis" style="color: red;">
-            Error 404
-          </th>
-          <th id="invis" style="width: 90px !important; height: 90px !important; visibility: hidden;">
-            <img id="mainLogo" src="images/TatoLabsLogo.png">
-          </th>
-        </table>
-        <hr>
-      </header>
-      <br>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="../index.html">Home</a>
+        <a href="../info.html">Info</a>
+        <a href="../credits.html">Credits</a>
+      </div>
+      <div class="nav-center"><h1>404</h1></div>
+      <div class="nav-right">
+        <div class="credits">
+          <span>Credits:</span>
+          <span class="credit-chip" id="credits">0</span>
+        </div>
+      </div>
+    </nav>
 
-      <p class="mainSaying">You broke the website, good job. Press the logo in the top left to go back to the main page.</p>
-      
-      <br>
-      <footer>
-        <hr>
-        <br>
-        <table id="invis">
-          <th id="invis" style="width:30%;">
-            <a href="privPoly.html">Privicy Policy</a>
-          </th>
-          <th id="invis" style="width:30%;">
-            <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a>
-          </th>
-          <th id="invis" style="width:30%;">
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>
-          </th>
-        </table>
-        <br><b>Copyright (c) <span id="year">2077</span> KingPotatoTato</b></p>
-      </footer>
-<script src="script.js"></script>
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="game-container">
+        <h2>You broke the website.</h2>
+        Great job. Click home in the top left corner to go home.
+      </div>
+    </div>
   </body>
 </html>

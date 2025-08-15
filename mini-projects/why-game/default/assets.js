@@ -1,1 +1,0 @@
-pgf.jsonp("assets", {"@":"assets","version":"0.25","images":[{"name":"Checkpoiny","files":{"name":"1.png","size":1733}},{"name":"Coin","files":{"name":"2.png","size":700}},{"name":"brick","files":{"name":"3.png","size":44824}},{"name":"pole(1)","files":{"name":"4.png","size":2847}}],"fonts":{"name":"Arimo","files":{"name":"Arimo-Regular.ttf","size":null}},"behaviors":[]});

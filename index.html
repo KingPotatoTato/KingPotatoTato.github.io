@@ -1,52 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="images/TatoLabsLogo.ico">
-    <title>Tato Labs</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="globalScript.js"></script>
+    <title>Home</title>
   </head>
-  
   <body>
-      <header>
-        <table id="invis">
-          <th id="invis" class="imgLogo">
-            <img id="mainLogo" src="images/TatoLabsLogo.png" alt="TLL" onclick="location.href = 'index.html';">
-          </th>
-          <th id="invis">
-            Tato Labs
-          </th>
-          <th id="invis" style="width: 90px !important; height: 90px !important; visibility: hidden;">
-            <img id="mainLogo" src="images/TatoLabsLogo.png">
-          </th>
-        </table>
-        <hr>
-      </header>
-      
-      <p class="mainSaying">My little corner of the internet.</p>
-      
-      <br>
-      
-      <p>About Me.....................<button class="button" onclick="location.href='aboutme.html'">Go There<span class="arrow">></span></button></p>
-      <p>Contact Me...................<button class="button" onclick="location.href='contact.html'">Go There<span class="arrow">></span></button></p>
-      <p>Mini Projects................<button class="button" onclick="location.href='mini-projects/miniprojects.html'">Go There<span class="arrow">></span></button></p>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="../index.html">Home</a>
+        <a href="../info.html">Info</a>
+        <a href="../credits.html">Credits</a>
+      </div>
+      <div class="nav-center">
+        <h1>Home</h1>
+      </div>
+      <div class="nav-right">
+        <div class="credits">
+          <span>Credits:</span>
+          <span class="credit-chip" id="credits">0</span>
+        </div>
+      </div>
+    </nav>
 
-      <br>
-      <footer>
-        <hr>
-        <table id="invis">
-          <th id="invis" style="width:30%;">
-            <a href="privPoly.html">Privicy Policy</a>
-          </th>
-          <th id="invis" style="width:30%;">
-            <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a>
-          </th>
-          <th id="invis" style="width:30%;">
-            <a href="https://github.com/KingPotatoTato/KingPotatoTato.github.io/tree/main" target="_blank">Github</a>
-          </th>
-        </table>
-        <br><b>Copyright (c) <span id="year">2077</span> KingPotatoTato</b></p>
-      </footer>
-<script src="script.js"></script>
+    <!-- Hero Section -->
+    <div class="hero">
+      <p class="hero-title">Place down your chips & win!</p>
+
+      <!-- Games Grid -->
+      <div class="games-grid">
+        <div class="game-card" onclick="location.href='/plinko/plinko.html'">
+          <div class="game-icon">🎯</div>
+          <h3 class="game-title">Plinko</h3>
+          <button class="play-button">Play Now</button>
+        </div>
+
+        <div class="game-card" onclick="location.href='/slots/slots.html'">
+          <div class="game-icon">🎰</div>
+          <h3 class="game-title">Slots</h3>
+          <button class="play-button">Play Now</button>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="stats-section">
+        <h3 class="stats-title">Stats</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number" id="gamesPlayed">0</span>
+            <span class="stat-label">Games Played</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="totalWins">0</span>
+            <span class="stat-label">Total Wins</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="biggestWin">0</span>
+            <span class="stat-label">Biggest Win</span>
+          </div>
+        </div>
+        <div class="stat-item" id="overallCoin">
+          <span class="stat-number" id="overall">0</span>
+          <span class="stat-label">Overall</span>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
