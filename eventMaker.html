@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Scheduler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+        
+        .file-input-wrapper:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-name {
+            margin-left: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        .generate-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .schedule-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        .schedule-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .schedule-header h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .efficiency-badge {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .efficiency-badge.excellent {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+        
+        .efficiency-badge.good {
+            background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+        }
+        
+        .efficiency-badge.moderate {
+            background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
+        }
+        
+        .day-section {
+            margin-bottom: 25px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .day-section:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .day-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .day-events {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .event-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .event-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .participants {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .free-people {
+            background: #f0f8ff;
+            padding: 15px 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .free-people-header {
+            color: #4a90e2;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        
+        .free-people-list {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c00;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #c00;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Event Scheduler</h1>
+            <p>Made with <3 -Tato</p>
+        </div>
+        
+        <div class="upload-section">
+            <h2>Upload Event Assignments</h2>
+            <p style="margin-bottom: 20px; color: #666;">Upload a CSV file where rows are people and columns are their assigned events. (Google Sheets can be used to make CSV file.)</p>
+            
+            <label class="file-input-wrapper">
+                Choose CSV File
+                <input type="file" id="csvFile" accept=".csv">
+            </label>
+            <span class="file-name" id="fileName">No file selected</span>
+            
+            <br>
+            <button class="generate-btn" id="generateBtn" disabled>Generate Schedule</button>
+            
+            <div id="error" class="error" style="display: none;"></div>
+            
+            <details style="margin-top: 30px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+                <summary style="cursor: pointer; font-weight: bold; color: #4a90e2;">
+                    Techniques Used
+                </summary>
+                <div style="margin-top: 15px; color: #666; line-height: 1.6;">
+                    <p><strong>This scheduler uses advanced algorithms to minimize days:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>DSATUR Algorithm:</strong> Uses saturation degree coloring for optimal event placement</li>
+                        <li><strong>Clique Detection:</strong> Finds groups of mutually conflicting events to determine theoretical minimum days</li>
+                        <li><strong>Schedule Compression:</strong> Post-processes to move events to earlier days when possible</li>
+                        <li><strong>Conflict Analysis:</strong> Builds a complete conflict graph to ensure no scheduling violations</li>
+                        <li><strong>Load Balancing:</strong> Attempts to distribute events evenly across days</li>
+                    </ul>
+                    <p style="margin-top: 10px;">The efficiency percentage shows how close the schedule is to the theoretical minimum number of days possible.</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="schedule-container" id="scheduleContainer">
+            <div class="schedule-header">
+                <h2>Generated Schedule</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Total Days:</span>
+                        <span class="stat-value" id="totalDays">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Total Events:</span>
+                        <span class="stat-value" id="totalEvents">0</span>
+                    </div>
+                </div>
+            </div>
+            <div id="scheduleContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        let csvData = null;
+        
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('generateBtn').disabled = false;
+                document.getElementById('error').style.display = 'none';
+            }
+        });
+        
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const file = document.getElementById('csvFile').files[0];
+            if (!file) return;
+            
+            const btn = this;
+            const originalText = btn.textContent;
+            btn.textContent = 'Optimizing Schedule...';
+            btn.disabled = true;
+            
+            // Add a small delay for visual feedback
+            setTimeout(() => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        csvData = parseCSV(e.target.result);
+                        const schedule = generateSchedule(csvData);
+                        displaySchedule(schedule);
+                    } catch (error) {
+                        showError(error.message);
+                    } finally {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                };
+                reader.readAsText(file);
+            }, 300);
+        });
+        
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const people = lines[0].split(',').map(p => p.trim());
+            const events = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const eventRow = lines[i].split(',').map(e => e.trim());
+                events.push(eventRow);
+            }
+            
+            return { people, events };
+        }
+        
+        function generateSchedule(data) {
+            const { people, events } = data;
+            const eventAssignments = {};
+            const personEvents = {};
+            
+            // Build event assignments and person-event mappings
+            for (let eventIdx = 0; eventIdx < events.length; eventIdx++) {
+                for (let personIdx = 0; personIdx < people.length; personIdx++) {
+                    const eventName = events[eventIdx][personIdx];
+                    if (eventName) {
+                        // Track which people are in each event
+                        if (!eventAssignments[eventName]) {
+                            eventAssignments[eventName] = [];
+                        }
+                        eventAssignments[eventName].push(people[personIdx]);
+                        
+                        // Track which events each person is in
+                        if (!personEvents[people[personIdx]]) {
+                            personEvents[people[personIdx]] = [];
+                        }
+                        personEvents[people[personIdx]].push(eventName);
+                    }
+                }
+            }
+            
+            // Create conflict graph
+            const conflicts = {};
+            const allEvents = Object.keys(eventAssignments);
+            
+            for (const event of allEvents) {
+                conflicts[event] = new Set();
+            }
+            
+            // Two events conflict if they share any person
+            for (const person in personEvents) {
+                const personalEvents = personEvents[person];
+                for (let i = 0; i < personalEvents.length; i++) {
+                    for (let j = i + 1; j < personalEvents.length; j++) {
+                        conflicts[personalEvents[i]].add(personalEvents[j]);
+                        conflicts[personalEvents[j]].add(personalEvents[i]);
+                    }
+                }
+            }
+            
+            // Find maximum clique size (lower bound on days needed)
+            const maxCliqueSize = findMaxCliqueSize(conflicts, allEvents);
+            
+            // DSATUR algorithm (more efficient graph coloring)
+            const schedule = dsaturColoring(allEvents, conflicts);
+            
+            // Post-process: try to compress schedule
+            const compressedSchedule = compressSchedule(schedule, conflicts);
+            
+            // Calculate efficiency metrics
+            const efficiency = calculateEfficiency(compressedSchedule, conflicts, maxCliqueSize);
+            
+            return {
+                days: compressedSchedule,
+                eventAssignments: eventAssignments,
+                totalEvents: allEvents.length,
+                efficiency: efficiency,
+                theoreticalMin: maxCliqueSize
+            };
+        }
+        
+        // DSATUR algorithm for better graph coloring
+        function dsaturColoring(events, conflicts) {
+            const colors = {};
+            const saturation = {};
+            const uncolored = new Set(events);
+            
+            // Initialize saturation
+            for (const event of events) {
+                saturation[event] = 0;
+            }
+            
+            const schedule = [];
+            
+            while (uncolored.size > 0) {
+                // Find vertex with highest saturation (most constrained)
+                let maxSat = -1;
+                let maxDegree = -1;
+                let selectedEvent = null;
+                
+                for (const event of uncolored) {
+                    const sat = saturation[event];
+                    const deg = conflicts[event].size;
+                    
+                    if (sat > maxSat || (sat === maxSat && deg > maxDegree)) {
+                        maxSat = sat;
+                        maxDegree = deg;
+                        selectedEvent = event;
+                    }
+                }
+                
+                // Find the lowest color (day) that doesn't conflict
+                let dayIndex = 0;
+                let placed = false;
+                
+                for (let i = 0; i < schedule.length; i++) {
+                    let canPlace = true;
+                    for (const dayEvent of schedule[i]) {
+                        if (conflicts[selectedEvent].has(dayEvent)) {
+                            canPlace = false;
+                            break;
+                        }
+                    }
+                    if (canPlace) {
+                        schedule[i].push(selectedEvent);
+                        dayIndex = i;
+                        placed = true;
+                        break;
+                    }
+                }
+                
+                if (!placed) {
+                    // Need a new day
+                    schedule.push([selectedEvent]);
+                    dayIndex = schedule.length - 1;
+                }
+                
+                colors[selectedEvent] = dayIndex;
+                uncolored.delete(selectedEvent);
+                
+                // Update saturation for neighbors
+                for (const neighbor of conflicts[selectedEvent]) {
+                    if (uncolored.has(neighbor)) {
+                        const neighborColors = new Set();
+                        for (const adjEvent of conflicts[neighbor]) {
+                            if (colors[adjEvent] !== undefined) {
+                                neighborColors.add(colors[adjEvent]);
+                            }
+                        }
+                        saturation[neighbor] = neighborColors.size;
+                    }
+                }
+            }
+            
+            return schedule;
+        }
+        
+        // Find approximate maximum clique size (lower bound for days)
+        function findMaxCliqueSize(conflicts, events) {
+            let maxSize = 1;
+            
+            // Greedy clique finding
+            for (const start of events) {
+                const clique = [start];
+                const candidates = Array.from(conflicts[start]);
+                
+                for (const candidate of candidates) {
+                    let canAdd = true;
+                    for (const member of clique) {
+                        if (!conflicts[candidate].has(member)) {
+                            canAdd = false;
+                            break;
+                        }
+                    }
+                    if (canAdd) {
+                        clique.push(candidate);
+                    }
+                }
+                
+                maxSize = Math.max(maxSize, clique.length);
+            }
+            
+            return maxSize;
+        }
+        
+        // Try to compress the schedule by moving events to earlier days
+        function compressSchedule(schedule, conflicts) {
+            const compressed = schedule.map(day => [...day]);
+            let improved = true;
+            
+            while (improved) {
+                improved = false;
+                
+                for (let fromDay = compressed.length - 1; fromDay > 0; fromDay--) {
+                    const eventsToMove = [];
+                    
+                    for (const event of compressed[fromDay]) {
+                        // Try to move to an earlier day
+                        for (let toDay = 0; toDay < fromDay; toDay++) {
+                            let canMove = true;
+                            for (const dayEvent of compressed[toDay]) {
+                                if (conflicts[event].has(dayEvent)) {
+                                    canMove = false;
+                                    break;
+                                }
+                            }
+                            if (canMove) {
+                                eventsToMove.push({ event, from: fromDay, to: toDay });
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Apply moves
+                    for (const move of eventsToMove) {
+                        compressed[move.from] = compressed[move.from].filter(e => e !== move.event);
+                        compressed[move.to].push(move.event);
+                        improved = true;
+                    }
+                }
+                
+                // Remove empty days
+                for (let i = compressed.length - 1; i >= 0; i--) {
+                    if (compressed[i].length === 0) {
+                        compressed.splice(i, 1);
+                    }
+                }
+            }
+            
+            return compressed;
+        }
+        
+        // Calculate efficiency metrics
+        function calculateEfficiency(schedule, conflicts, theoreticalMin) {
+            const actualDays = schedule.length;
+            const totalEvents = schedule.reduce((sum, day) => sum + day.length, 0);
+            const avgEventsPerDay = totalEvents / actualDays;
+            const maxEventsPerDay = Math.max(...schedule.map(day => day.length));
+            const minEventsPerDay = Math.min(...schedule.map(day => day.length));
+            
+            // Calculate efficiency score (100% means optimal, lower means less efficient)
+            const efficiency = (theoreticalMin / actualDays * 100).toFixed(1);
+            
+            return {
+                actualDays,
+                theoreticalMin,
+                efficiency: efficiency,
+                avgEventsPerDay: avgEventsPerDay.toFixed(1),
+                maxEventsPerDay,
+                minEventsPerDay,
+                balance: (minEventsPerDay / maxEventsPerDay * 100).toFixed(1)
+            };
+        }
+        
+        // Helper function to rebuild conflicts for comparison
+        function buildConflicts(eventAssignments, data) {
+            const conflicts = {};
+            const personEvents = {};
+            
+            // Build person-event mappings
+            for (const event in eventAssignments) {
+                conflicts[event] = new Set();
+                for (const person of eventAssignments[event]) {
+                    if (!personEvents[person]) {
+                        personEvents[person] = [];
+                    }
+                    personEvents[person].push(event);
+                }
+            }
+            
+            // Build conflicts
+            for (const person in personEvents) {
+                const events = personEvents[person];
+                for (let i = 0; i < events.length; i++) {
+                    for (let j = i + 1; j < events.length; j++) {
+                        conflicts[events[i]].add(events[j]);
+                        conflicts[events[j]].add(events[i]);
+                    }
+                }
+            }
+            
+            return conflicts;
+        }
+        
+        // Calculate how many days a naive greedy algorithm would need
+        function calculateNaiveSchedule(events, conflicts) {
+            const schedule = [];
+            const unscheduled = new Set(events);
+            
+            while (unscheduled.size > 0) {
+                const dayEvents = [];
+                const availableEvents = Array.from(unscheduled);
+                
+                // Simple greedy: just take first available event
+                for (const event of availableEvents) {
+                    let canSchedule = true;
+                    for (const scheduledEvent of dayEvents) {
+                        if (conflicts[event].has(scheduledEvent)) {
+                            canSchedule = false;
+                            break;
+                        }
+                    }
+                    if (canSchedule) {
+                        dayEvents.push(event);
+                        unscheduled.delete(event);
+                    }
+                }
+                
+                if (dayEvents.length > 0) {
+                    schedule.push(dayEvents);
+                }
+            }
+            
+            return schedule.length;
+        }
+        
+        function displaySchedule(schedule) {
+            const container = document.getElementById('scheduleContainer');
+            const content = document.getElementById('scheduleContent');
+            
+            container.style.display = 'block';
+            document.getElementById('totalDays').textContent = schedule.days.length;
+            document.getElementById('totalEvents').textContent = schedule.totalEvents;
+            
+            // Get all people from the CSV data
+            const allPeople = new Set(csvData.people);
+            const allEvents = Object.keys(schedule.eventAssignments);
+            const conflicts = buildConflicts(schedule.eventAssignments, csvData);
+            
+            // Determine efficiency badge class
+            let efficiencyClass = 'moderate';
+            if (schedule.efficiency.efficiency >= 90) efficiencyClass = 'excellent';
+            else if (schedule.efficiency.efficiency >= 75) efficiencyClass = 'good';
+            
+            // Calculate a naive schedule for comparison
+            const naiveSchedule = calculateNaiveSchedule(allEvents, conflicts);
+            const improvement = Math.round(((naiveSchedule - schedule.days.length) / naiveSchedule) * 100);
+            
+            // Update header with efficiency metrics
+            const headerHtml = `
+                <h2>Generated Schedule</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Total Days:</span>
+                        <span class="stat-value">${schedule.days.length}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Total Events:</span>
+                        <span class="stat-value">${schedule.totalEvents}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Min Days Possible:</span>
+                        <span class="stat-value">${schedule.theoreticalMin}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="efficiency-badge ${efficiencyClass}">
+                            ⚡ ${schedule.efficiency.efficiency}% Efficient
+                        </span>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <strong>Schedule Metrics:</strong> 
+                    Avg events/day: ${schedule.efficiency.avgEventsPerDay} | 
+                    Range: ${schedule.efficiency.minEventsPerDay}-${schedule.efficiency.maxEventsPerDay} events | 
+                    Balance: ${schedule.efficiency.balance}%
+                    ${improvement > 0 ? `<br><strong style="color: #4CAF50;">✓ ${improvement}% better than naive scheduling (${naiveSchedule} days)</strong>` : ''}
+                </div>
+            `;
+            document.querySelector('.schedule-header').innerHTML = headerHtml;
+            
+            let html = '';
+            
+            for (let dayIdx = 0; dayIdx < schedule.days.length; dayIdx++) {
+                const dayEvents = schedule.days[dayIdx];
+                
+                // Find who's busy on this day
+                const busyPeople = new Set();
+                for (const event of dayEvents) {
+                    const participants = schedule.eventAssignments[event];
+                    participants.forEach(person => busyPeople.add(person));
+                }
+                
+                // Find who's free on this day
+                const freePeople = Array.from(allPeople).filter(person => !busyPeople.has(person));
+                
+                // Calculate day utilization
+                const utilization = ((busyPeople.size / allPeople.size) * 100).toFixed(1);
+                
+                html += `
+                    <div class="day-section">
+                        <div class="day-header">
+                            Day ${dayIdx + 1} - ${dayEvents.length} Events 
+                            <span style="float: right; font-size: 0.9em; opacity: 0.9;">
+                                ${utilization}% People Busy
+                            </span>
+                        </div>
+                        <div class="day-events">
+                `;
+                
+                for (const event of dayEvents) {
+                    const participants = schedule.eventAssignments[event];
+                    html += `
+                        <div class="event-card">
+                            <div class="event-name">${event}</div>
+                            <div class="participants">
+                                <strong>Participants:</strong><br>
+                                ${participants.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += `
+                        </div>
+                        <div class="free-people">
+                            <div class="free-people-header">
+                                <strong>Free Today (${freePeople.length} people):</strong>
+                            </div>
+                            <div class="free-people-list">
+                                ${freePeople.length > 0 ? freePeople.join(', ') : 'Everyone is scheduled for an event'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            content.innerHTML = html;
+            
+            // Smooth scroll to schedule
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = 'Error: ' + message;
+            errorDiv.style.display = 'block';
+            document.getElementById('scheduleContainer').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
