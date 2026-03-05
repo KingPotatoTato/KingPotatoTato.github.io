@@ -200,34 +200,7 @@
             50%       { opacity: 0.07; }
         }
 
-        /* Search bar animation */
-        .search-bar-bg {
-            width: 280px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-        .search-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00c8ff, #0088ff, #00c8ff);
-            background-size: 200% 100%;
-            animation: searchSweep 6s ease-in-out infinite, searchGradient 2s linear infinite;
-            border-radius: 2px;
-        }
-        @keyframes searchSweep {
-            0%   { width: 0%; }
-            40%  { width: 80%; }
-            55%  { width: 80%; }
-            70%  { width: 0%; opacity: 0.3; }
-            72%  { opacity: 1; }
-            100% { width: 0%; }
-        }
-        @keyframes searchGradient {
-            0%   { background-position: 0% 0; }
-            100% { background-position: 200% 0; }
-        }
+
 
         /* Warning flash */
         .warning-flash {
@@ -342,16 +315,7 @@
             <div class="w-72 h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent"></div>
         </div>
 
-        <div class="mt-8 flex flex-col items-center gap-2">
-            <p class="text-white/20 text-[10px] tracking-[0.2em] uppercase">Scanning known routes</p>
-            <div class="search-bar-bg">
-                <div class="search-bar-fill"></div>
-            </div>
-            <p class="text-white/15 text-[9px] tracking-widest" id="searchStatus">Match: 0 of INF</p>
-        </div>
 
-        <div class="mt-6 text-white/20 text-[10px] font-mono space-y-1 text-center max-w-lg" id="logLines">
-        </div>
 
         <div class="mt-8 text-white/10 text-[9px] tracking-[0.3em] uppercase" id="timestamp"></div>
     </div>
@@ -451,53 +415,7 @@
             }
         }, 180);
 
-        // ─── Search status counter ───
-        let searchCount = 0;
-        const searchEl  = document.getElementById('searchStatus');
-        setInterval(() => {
-            searchCount += Math.floor(Math.random() * 8192 + 1024);
-            searchEl.textContent = `Scanned: ${searchCount.toLocaleString()} — Match: 0`;
-        }, 6000);
 
-        // ─── Fake Log Lines ───
-        const logContainer = document.getElementById('logLines');
-        const logMessages  = [
-            'GET /requested/path → 404 Not Found',
-            'router: no handler registered for route',
-            'asset resolver: file not found at path',
-            'HTTP/1.1 GET — response: 404',
-            'CDN edge: cache miss, origin returned 404',
-            'rewrite rule: no match — passthrough failed',
-            'proxy: upstream returned empty body',
-            'link validator: dead reference detected',
-            'crawler: URL returns null content',
-            'sitemap: stale entry pointing to void',
-            'redirect chain: broken at hop 3',
-            'resource: inode evicted from namespace',
-            'fetch: TypeError — Failed to resolve',
-            'ERR_NAME_NOT_RESOLVED',
-            'route table: no entry for requested path',
-            'manifest: missing chunk reference',
-        ];
-
-        function addLogLine() {
-            const line = document.createElement('div');
-            line.className = 'transition-all duration-700';
-            line.style.opacity   = '0';
-            line.style.transform = 'translateY(-5px)';
-            const msg  = logMessages[Math.floor(Math.random() * logMessages.length)];
-            const time = new Date().toISOString().split('T')[1].slice(0, 12);
-            line.textContent = `[${time}] ${msg}`;
-            logContainer.prepend(line);
-            requestAnimationFrame(() => {
-                line.style.opacity   = '1';
-                line.style.transform = 'translateY(0)';
-            });
-            while (logContainer.children.length > 6) logContainer.removeChild(logContainer.lastChild);
-        }
-
-        setInterval(addLogLine, 1500);
-        addLogLine();
 
         // ─── Timestamp ───
         const tsEl = document.getElementById('timestamp');
