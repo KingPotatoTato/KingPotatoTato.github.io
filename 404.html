@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 – Not Found</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #050508;
+            overflow: hidden;
+        }
+
+        /* CRT screen curvature */
+        .crt-wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+        }
+        .crt-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -5%;
+            background: radial-gradient(ellipse at center, transparent 50%, #000 120%);
+            opacity: 0.5;
+        }
+
+        /* Vignette pulse — cyan */
+        .vignette-pulse {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            pointer-events: none;
+            animation: vPulse 3s ease-in-out infinite;
+        }
+        @keyframes vPulse {
+            0%, 100% { box-shadow: inset 0 0 120px rgba(0, 200, 255, 0.12); }
+            50%       { box-shadow: inset 0 0 200px rgba(0, 200, 255, 0.28); }
+        }
+
+        #errorCode {
+            font-size: clamp(6rem, 20vw, 16rem);
+            font-weight: 800;
+            color: #fff;
+            position: relative;
+            letter-spacing: 0.08em;
+            text-shadow:
+                0 0 10px rgba(0,200,255,0.8),
+                0 0 40px rgba(0,200,255,0.4),
+                0 0 80px rgba(0,200,255,0.2),
+                0 0 150px rgba(0,200,255,0.1);
+            animation: colorShift 5s ease-in-out infinite;
+            z-index: 20;
+        }
+
+        @keyframes colorShift {
+            0%, 100% {
+                text-shadow:
+                    0 0 10px rgba(0,200,255,0.9),
+                    0 0 40px rgba(0,200,255,0.5),
+                    0 0 100px rgba(0,200,255,0.3),
+                    0 0 200px rgba(0,200,255,0.1);
+            }
+            33% {
+                text-shadow:
+                    0 0 10px rgba(80,120,255,0.9),
+                    0 0 40px rgba(80,120,255,0.5),
+                    0 0 100px rgba(80,120,255,0.3),
+                    0 0 200px rgba(80,120,255,0.1);
+            }
+            66% {
+                text-shadow:
+                    0 0 10px rgba(0,255,220,0.9),
+                    0 0 40px rgba(0,255,220,0.5),
+                    0 0 100px rgba(0,255,220,0.3),
+                    0 0 200px rgba(0,255,220,0.1);
+            }
+        }
+
+        #errorCode::before,
+        #errorCode::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        #errorCode::before {
+            color: #0ff;
+            animation: glitchLayer1 0.28s infinite;
+            clip-path: inset(0 0 60% 0);
+            mix-blend-mode: screen;
+        }
+        #errorCode::after {
+            color: #08f;
+            animation: glitchLayer2 0.33s infinite;
+            clip-path: inset(40% 0 0 0);
+            mix-blend-mode: screen;
+        }
+
+        @keyframes glitchLayer1 {
+            0%   { transform: translate(0); }
+            20%  { transform: translate(-5px, 3px); }
+            40%  { transform: translate(5px, -2px); }
+            60%  { transform: translate(-3px, -3px); }
+            80%  { transform: translate(4px, 4px); }
+            100% { transform: translate(0); }
+        }
+        @keyframes glitchLayer2 {
+            0%   { transform: translate(0); }
+            20%  { transform: translate(5px, -3px); }
+            40%  { transform: translate(-5px, 2px); }
+            60%  { transform: translate(3px, 3px); }
+            80%  { transform: translate(-4px, -4px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Scanlines */
+        .scanlines::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 1px,
+                rgba(0,0,0,0.12) 1px,
+                rgba(0,0,0,0.12) 3px
+            );
+            pointer-events: none;
+            z-index: 80;
+        }
+
+        .flicker { animation: flicker 0.1s infinite; }
+        @keyframes flicker {
+            0%   { opacity: 0.96; }
+            25%  { opacity: 1; }
+            50%  { opacity: 0.98; }
+            75%  { opacity: 1; }
+            100% { opacity: 0.97; }
+        }
+
+        /* Glitch bars */
+        .glitch-bar {
+            position: fixed; left: 0; width: 100%;
+            z-index: 70; pointer-events: none;
+        }
+        .glitch-bar:nth-child(1) { height: 2px; animation: barMove 3.5s linear infinite; background: rgba(0,200,255,0.04); }
+        .glitch-bar:nth-child(2) { height: 4px; animation: barMove 5s linear infinite reverse; background: rgba(80,120,255,0.04); }
+        .glitch-bar:nth-child(3) { height: 1px; animation: barMove 2.8s linear infinite; background: rgba(0,255,220,0.06); animation-delay: -1s; }
+
+        @keyframes barMove {
+            0%   { top: -5%; }
+            100% { top: 105%; }
+        }
+
+        .subtitle { animation: subtitleGlitch 2.5s infinite; }
+        @keyframes subtitleGlitch {
+            0%, 90%, 100% { transform: translate(0); opacity: 0.6; filter: blur(0); }
+            91% { transform: translate(-6px, 0) skewX(-2deg); opacity: 0.2; filter: blur(1px); }
+            93% { transform: translate(6px, 0) skewX(3deg); opacity: 0.9; filter: blur(0); }
+            95% { transform: translate(-3px, 0) skewX(-1deg); opacity: 0.4; filter: blur(2px); }
+            97% { transform: translate(3px, 0); opacity: 0.7; filter: blur(0); }
+        }
+
+        /* Void pulse icon */
+        .void-icon {
+            font-size: 1.6rem;
+            display: inline-block;
+            animation: voidPulse 2.2s ease-in-out infinite;
+            text-shadow: 0 0 12px rgba(0,200,255,0.8), 0 0 30px rgba(0,200,255,0.4);
+        }
+        @keyframes voidPulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50%       { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Hex grid — cyan tint */
+        .hex-grid {
+            position: fixed; inset: 0; z-index: 1; opacity: 0.04;
+            background-image:
+                linear-gradient(30deg,  rgba(0,200,255,0.3) 12%, transparent 12.5%, transparent 87%, rgba(0,200,255,0.3) 87.5%),
+                linear-gradient(150deg, rgba(0,200,255,0.3) 12%, transparent 12.5%, transparent 87%, rgba(0,200,255,0.3) 87.5%),
+                linear-gradient(30deg,  rgba(0,200,255,0.3) 12%, transparent 12.5%, transparent 87%, rgba(0,200,255,0.3) 87.5%),
+                linear-gradient(150deg, rgba(0,200,255,0.3) 12%, transparent 12.5%, transparent 87%, rgba(0,200,255,0.3) 87.5%),
+                linear-gradient(60deg,  rgba(0,200,255,0.2) 25%, transparent 25.5%, transparent 75%, rgba(0,200,255,0.2) 75%),
+                linear-gradient(60deg,  rgba(0,200,255,0.2) 25%, transparent 25.5%, transparent 75%, rgba(0,200,255,0.2) 75%);
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+            animation: hexPulse 6s ease-in-out infinite;
+        }
+        @keyframes hexPulse {
+            0%, 100% { opacity: 0.03; }
+            50%       { opacity: 0.07; }
+        }
+
+        /* Search bar animation */
+        .search-bar-bg {
+            width: 280px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .search-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00c8ff, #0088ff, #00c8ff);
+            background-size: 200% 100%;
+            animation: searchSweep 6s ease-in-out infinite, searchGradient 2s linear infinite;
+            border-radius: 2px;
+        }
+        @keyframes searchSweep {
+            0%   { width: 0%; }
+            40%  { width: 80%; }
+            55%  { width: 80%; }
+            70%  { width: 0%; opacity: 0.3; }
+            72%  { opacity: 1; }
+            100% { width: 0%; }
+        }
+        @keyframes searchGradient {
+            0%   { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Warning flash */
+        .warning-flash {
+            position: fixed;
+            inset: 0;
+            z-index: 85;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(circle at center, rgba(0,180,255,0.12), transparent 70%);
+        }
+        .warning-flash.active {
+            animation: wFlash 0.15s ease-out;
+        }
+        @keyframes wFlash {
+            0%   { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Error code container with perspective tilt */
+        .error-container { perspective: 1000px; }
+        .error-inner {
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
+        }
+
+        /* Corner decorations */
+        .corner {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            z-index: 60;
+            pointer-events: none;
+        }
+        .corner--tl { top: 20px; left: 20px; border-top: 1px solid rgba(0,200,255,0.3); border-left: 1px solid rgba(0,200,255,0.3); }
+        .corner--tr { top: 20px; right: 20px; border-top: 1px solid rgba(0,200,255,0.3); border-right: 1px solid rgba(0,200,255,0.3); }
+        .corner--bl { bottom: 20px; left: 20px; border-bottom: 1px solid rgba(0,200,255,0.3); border-left: 1px solid rgba(0,200,255,0.3); }
+        .corner--br { bottom: 20px; right: 20px; border-bottom: 1px solid rgba(0,200,255,0.3); border-right: 1px solid rgba(0,200,255,0.3); }
+
+        .corner::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0,200,255,0.5);
+        }
+        .corner--tl::after { top: -2px; left: -2px; }
+        .corner--tr::after { top: -2px; right: -2px; }
+        .corner--bl::after { bottom: -2px; left: -2px; }
+        .corner--br::after { bottom: -2px; right: -2px; }
+
+        /* Data stream on the sides */
+        .data-stream {
+            position: fixed;
+            top: 0;
+            width: 120px;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+        .data-stream--left  { left: 0;  mask-image: linear-gradient(to right, rgba(0,0,0,1), transparent); }
+        .data-stream--right { right: 0; mask-image: linear-gradient(to left, rgba(0,0,0,1), transparent); text-align: right; }
+
+        .data-stream span {
+            display: block;
+            font-size: 9px;
+            color: #00c8ff;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="scanlines">
+    <div class="hex-grid"></div>
+    <div class="glitch-bar"></div>
+    <div class="glitch-bar"></div>
+    <div class="glitch-bar"></div>
+
+    <div class="corner corner--tl"></div>
+    <div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div>
+    <div class="corner corner--br"></div>
+
+    <div class="crt-wrap"></div>
+    <div class="vignette-pulse"></div>
+    <div class="warning-flash" id="warningFlash"></div>
+
+    <div class="data-stream data-stream--left"  id="dataStreamL"></div>
+    <div class="data-stream data-stream--right" id="dataStreamR"></div>
+
+    <div class="flicker flex flex-col items-center justify-center min-h-screen relative z-20 select-none">
+        <div class="error-container">
+            <div class="error-inner" id="errorInner">
+                <div id="errorCode" data-text="404" class="relative">404</div>
+            </div>
+        </div>
+
+        <p class="subtitle text-white/60 text-lg md:text-2xl mt-4 tracking-[0.3em] uppercase">
+            Not Found
+        </p>
+
+        <p class="text-white/40 text-sm md:text-base mt-3 tracking-widest italic">
+            This page has <span id="censorGlitch" class="inline-block text-cyan-400/80 not-italic font-bold" style="text-shadow: 0 0 6px rgba(0,200,255,0.6), 0 0 20px rgba(0,200,255,0.3);">ceased to exist</span>.
+        </p>
+
+        <div class="mt-8 flex flex-col items-center gap-3">
+            <div class="w-72 h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent"></div>
+            <p class="text-white/30 text-xs md:text-sm tracking-widest uppercase" id="statusLine">
+                Route: unresolvable
+            </p>
+            <div class="w-72 h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent"></div>
+        </div>
+
+        <div class="mt-8 flex flex-col items-center gap-2">
+            <p class="text-white/20 text-[10px] tracking-[0.2em] uppercase">Scanning known routes</p>
+            <div class="search-bar-bg">
+                <div class="search-bar-fill"></div>
+            </div>
+            <p class="text-white/15 text-[9px] tracking-widest" id="searchStatus">Match: 0 of INF</p>
+        </div>
+
+        <div class="mt-6 text-white/20 text-[10px] font-mono space-y-1 text-center max-w-lg" id="logLines">
+        </div>
+
+        <div class="mt-8 text-white/10 text-[9px] tracking-[0.3em] uppercase" id="timestamp"></div>
+    </div>
+
+    <canvas id="bgCanvas"   class="fixed inset-0 z-0 pointer-events-none"></canvas>
+    <canvas id="rainCanvas" class="fixed inset-0 z-2 pointer-events-none"></canvas>
+
+    <script>
+        // ─── Censor Glitch ("ceased to exist" alt phrases) ───
+        const censorEl = document.getElementById('censorGlitch');
+        const censorPhrases = [
+            'ceased to exist',
+            'never existed',
+            'been erased',
+            'vanished',
+            'gone dark',
+            'been deleted',
+            'left the void',
+            'null',
+            'undefined',
+            'NaN',
+        ];
+        let censorIdx = 0;
+        const glitchChars = '#@$%&?!*0123456789ABCDEF<>/\\|{}[]~^';
+
+        setInterval(() => {
+            // Occasional phrase swap
+            if (Math.random() < 0.02) {
+                censorIdx = (censorIdx + 1) % censorPhrases.length;
+                censorEl.textContent = censorPhrases[censorIdx];
+            }
+            // Glitch corruption pass
+            if (Math.random() < 0.12) {
+                const base = censorPhrases[censorIdx];
+                censorEl.textContent = base
+                    .split('')
+                    .map(c => Math.random() < 0.25 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : c)
+                    .join('');
+                setTimeout(() => { censorEl.textContent = censorPhrases[censorIdx]; }, 80);
+            }
+            if (Math.random() < 0.15) {
+                censorEl.style.textShadow = '0 0 12px rgba(0,200,255,1), 0 0 30px rgba(0,200,255,0.7), 0 0 60px rgba(0,200,255,0.4)';
+            } else {
+                censorEl.style.textShadow = '0 0 6px rgba(0,200,255,0.6), 0 0 20px rgba(0,200,255,0.3)';
+            }
+        }, 80);
+
+        // ─── 3D Tilt on Mouse ───
+        const errorInner = document.getElementById('errorInner');
+        document.addEventListener('mousemove', (e) => {
+            const cx = window.innerWidth  / 2;
+            const cy = window.innerHeight / 2;
+            const dx = (e.clientX - cx) / cx;
+            const dy = (e.clientY - cy) / cy;
+            errorInner.style.transform = `rotateY(${dx * 8}deg) rotateX(${-dy * 5}deg)`;
+        });
+
+        // ─── Permanent Text Glitch ───
+        const errorCode    = document.getElementById('errorCode');
+        const originalText = '404';
+
+        setInterval(() => {
+            const intensity = Math.random() < 0.1 ? 0.9 : 0.35;
+            errorCode.textContent = originalText
+                .split('')
+                .map(char => Math.random() < intensity
+                    ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
+                    : char)
+                .join('');
+            errorCode.setAttribute('data-text', errorCode.textContent);
+        }, 70);
+
+        // ─── Status Line Glitch ───
+        const statusLine = document.getElementById('statusLine');
+        const statusTexts = [
+            'Route: unresolvable',
+            'Path: null',
+            'Resource: missing',
+            'URL: phantom',
+            'Index: corrupted',
+            'Pointer: dangling',
+            'Node: evicted',
+            'Cache: cold miss',
+            'Origin: silent',
+            'DNS: no record',
+            'Trace: lost',
+            'Reference: void',
+        ];
+
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                const txt = statusTexts[Math.floor(Math.random() * statusTexts.length)];
+                statusLine.textContent = txt
+                    .split('')
+                    .map(c => (Math.random() < 0.12 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : c))
+                    .join('');
+            }
+        }, 180);
+
+        // ─── Search status counter ───
+        let searchCount = 0;
+        const searchEl  = document.getElementById('searchStatus');
+        setInterval(() => {
+            searchCount += Math.floor(Math.random() * 8192 + 1024);
+            searchEl.textContent = `Scanned: ${searchCount.toLocaleString()} — Match: 0`;
+        }, 6000);
+
+        // ─── Fake Log Lines ───
+        const logContainer = document.getElementById('logLines');
+        const logMessages  = [
+            'GET /requested/path → 404 Not Found',
+            'router: no handler registered for route',
+            'asset resolver: file not found at path',
+            'HTTP/1.1 GET — response: 404',
+            'CDN edge: cache miss, origin returned 404',
+            'rewrite rule: no match — passthrough failed',
+            'proxy: upstream returned empty body',
+            'link validator: dead reference detected',
+            'crawler: URL returns null content',
+            'sitemap: stale entry pointing to void',
+            'redirect chain: broken at hop 3',
+            'resource: inode evicted from namespace',
+            'fetch: TypeError — Failed to resolve',
+            'ERR_NAME_NOT_RESOLVED',
+            'route table: no entry for requested path',
+            'manifest: missing chunk reference',
+        ];
+
+        function addLogLine() {
+            const line = document.createElement('div');
+            line.className = 'transition-all duration-700';
+            line.style.opacity   = '0';
+            line.style.transform = 'translateY(-5px)';
+            const msg  = logMessages[Math.floor(Math.random() * logMessages.length)];
+            const time = new Date().toISOString().split('T')[1].slice(0, 12);
+            line.textContent = `[${time}] ${msg}`;
+            logContainer.prepend(line);
+            requestAnimationFrame(() => {
+                line.style.opacity   = '1';
+                line.style.transform = 'translateY(0)';
+            });
+            while (logContainer.children.length > 6) logContainer.removeChild(logContainer.lastChild);
+        }
+
+        setInterval(addLogLine, 1500);
+        addLogLine();
+
+        // ─── Timestamp ───
+        const tsEl = document.getElementById('timestamp');
+        setInterval(() => { tsEl.textContent = new Date().toISOString(); }, 1000);
+
+        // ─── Warning Flash ───
+        const warningFlash = document.getElementById('warningFlash');
+        setInterval(() => {
+            if (Math.random() < 0.15) {
+                warningFlash.classList.add('active');
+                setTimeout(() => warningFlash.classList.remove('active'), 200);
+            }
+        }, 2200);
+
+        // ─── Background Noise Canvas ───
+        const canvas     = document.getElementById('bgCanvas');
+        const ctx        = canvas.getContext('2d');
+        const rainCanvas = document.getElementById('rainCanvas');
+        const rctx       = rainCanvas.getContext('2d');
+        const scale      = 0.5;
+
+        function resize() {
+            canvas.width  = Math.floor(window.innerWidth  * scale);
+            canvas.height = Math.floor(window.innerHeight * scale);
+            canvas.style.width  = window.innerWidth  + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.imageSmoothingEnabled = false;
+            rainCanvas.width  = window.innerWidth;
+            rainCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+
+        let noiseFrame = 0;
+        function drawNoise() {
+            noiseFrame++;
+            if (noiseFrame % 2 === 0) {
+                const w = canvas.width, h = canvas.height;
+                const imageData = ctx.createImageData(w, h);
+                const buf       = new Uint32Array(imageData.data.buffer);
+                for (let i = 0; i < buf.length; i++) {
+                    const v = (Math.random() * 12) | 0;
+                    buf[i]  = 0xFF000000 | (v << 16) | (v << 8) | v;
+                }
+                if (Math.random() < 0.08) {
+                    const y     = Math.floor(Math.random() * h);
+                    const tearH = Math.floor(Math.random() * 6) + 2;
+                    for (let ty = y; ty < y + tearH && ty < h; ty++) {
+                        for (let x = 0; x < w; x++) {
+                            const idx = ty * w + x;
+                            const r   = (Math.random() * 20) | 0;
+                            const g   = (60 + Math.random() * 60) | 0;
+                            const b   = (80 + Math.random() * 80) | 0;
+                            buf[idx]  = 0xFF000000 | (b << 16) | (g << 8) | r;
+                        }
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+            }
+            requestAnimationFrame(drawNoise);
+        }
+        drawNoise();
+
+        // ─── Digital Rain — cyan ───
+        const rainChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*(){}[]|/\\<>~';
+        let columns     = [];
+        const fontSize  = 14;
+
+        function initRain() {
+            const cols = Math.floor(rainCanvas.width / fontSize);
+            columns = [];
+            for (let i = 0; i < cols; i++) {
+                columns.push({
+                    y:       Math.random() * rainCanvas.height / fontSize,
+                    speed:   0.3 + Math.random() * 0.7,
+                    opacity: 0.02 + Math.random() * 0.05,
+                });
+            }
+        }
+
+        let rainFrame = 0;
+        function drawRain() {
+            rainFrame++;
+            if (rainFrame % 2 === 0) {
+                rctx.fillStyle = 'rgba(5,5,8,0.15)';
+                rctx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+                rctx.font = `${fontSize}px JetBrains Mono`;
+                columns.forEach((col, i) => {
+                    const char = rainChars[Math.floor(Math.random() * rainChars.length)];
+                    const x    = i * fontSize;
+                    const y    = col.y * fontSize;
+                    rctx.fillStyle = `rgba(0,200,255,${col.opacity * 3})`;
+                    rctx.fillText(char, x, y);
+                    rctx.fillStyle = `rgba(0,200,255,${col.opacity})`;
+                    rctx.fillText(rainChars[Math.floor(Math.random() * rainChars.length)], x, y - fontSize);
+                    col.y += col.speed;
+                    if (col.y * fontSize > rainCanvas.height + 100) {
+                        col.y     = -5;
+                        col.speed = 0.3 + Math.random() * 0.7;
+                    }
+                });
+            }
+            requestAnimationFrame(drawRain);
+        }
+
+        // ─── Data Streams ───
+        const dataStreamL = document.getElementById('dataStreamL');
+        const dataStreamR = document.getElementById('dataStreamR');
+        const hexChars    = '0123456789ABCDEF';
+
+        function genHexLine() {
+            let s = '';
+            for (let i = 0; i < 12; i++) s += hexChars[Math.floor(Math.random() * 16)];
+            return s;
+        }
+
+        function populateStream(el) {
+            const lines = Math.floor(window.innerHeight / 14);
+            for (let i = 0; i < lines; i++) {
+                const span       = document.createElement('span');
+                span.textContent = genHexLine();
+                el.appendChild(span);
+            }
+        }
+        populateStream(dataStreamL);
+        populateStream(dataStreamR);
+
+        setInterval(() => {
+            [dataStreamL, dataStreamR].forEach(el => {
+                const spans = el.querySelectorAll('span');
+                const idx   = Math.floor(Math.random() * spans.length);
+                if (spans[idx]) spans[idx].textContent = genHexLine();
+            });
+        }, 150);
+
+        // ─── Big Glitch Burst ───
+        setInterval(() => {
+            if (Math.random() < 0.1) {
+                document.body.style.filter = `hue-rotate(${Math.random() * 40 - 20}deg) brightness(${1 + Math.random() * 0.5})`;
+                setTimeout(() => {
+                    document.body.style.filter = `hue-rotate(${Math.random() * 15 - 7}deg)`;
+                    setTimeout(() => { document.body.style.filter = 'none'; }, 50);
+                }, 50);
+            }
+        }, 3000);
+
+        // ─── Screen Shake ───
+        setInterval(() => {
+            if (Math.random() < 0.05) {
+                const shakeX = (Math.random() - 0.5) * 12;
+                const shakeY = (Math.random() - 0.5) * 8;
+                document.body.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+                setTimeout(() => { document.body.style.transform = 'translate(0,0)'; }, 80);
+            }
+        }, 1500);
+
+        // ─── Init ───
+        resize();
+        initRain();
+        drawRain();
+    </script>
+</body>
+</html>
