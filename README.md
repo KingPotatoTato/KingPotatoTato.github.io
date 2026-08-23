@@ -1,2 +1,3 @@
-# Tato Labs
-Random website on the World Wide Web.
+# Tatolabs
+
+Website for projects.
